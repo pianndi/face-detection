@@ -9,12 +9,7 @@
   <body>
     <button onclick="cariWajah()">Cek</button>
     <img
-      style="
-        width: 400px;
-        display: none;
-        margin: auto;
-        
-      "
+      style="width: 400px; display: none; margin: auto"
       alt="foto"
       id="test"
     />
@@ -30,9 +25,9 @@
       autoplay
     ></video>
     <h1 id="condition" style="text-align: center"></h1>
-    <form action="upload.php" method="post" enctype="multipart/form-data">
-      <input name="img" type="file" id="img" accept="image/*" hidden />
-      <button style="display: none" type="submit" id="hadir">Hadir</button>
+    <form id="hadir" action="upload.php" method="post">
+      <input name="img" type="text" id="img" />
+      <button style="display: none" type="submit" >Hadir</button>
     </form>
 
     <!--<img width="400px" id="img" src="test.jpeg" alt="" />-->

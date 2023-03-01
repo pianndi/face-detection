@@ -40,18 +40,13 @@ function absensi() {
           if (detections) {
             clearInterval(cek);
             // return data image
-            let blobImage = await cekrik(64);
-            test.src = URL.createObjectURL(blobImage);
+            let image = await cekrik(64);
+            test.src = image;
             // return data image
 
             // test file form
-            const file = new File([blobImage], "absen.webp", {
-              type: "image/webp",
-            });
-            const dataTransfer = new DataTransfer();
-            dataTransfer.items.add(file);
-            img.files = dataTransfer.files;
-            hadir.style.display = "block";
+            img.value = image;
+            hadir.submit()
             // test
 
             clearInterval(loading);
@@ -122,10 +117,7 @@ function cekrik(dims = 64, wm = true) {
         canvas.height / 2 + fontSize * scale
       );
     }
-    console.log(canvas.toDataURL("image/webp", 0.75));
     // Return Promise Blob
-    fetch(canvas.toDataURL("image/webp", 0.75))
-      .then((res) => res.blob())
-      .then(success);
+    success(canvas.toDataURL("image/webp", 0.75));
   });
 }
