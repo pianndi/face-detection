@@ -29,7 +29,7 @@ function upload($data) {
 $gambar = upload($_POST);
 var_dump($gambar);
 if ($gambar) {
-  header("Location: foto_absen");
+  header("Location: foto_absen/".$gambar);
 }
 ?>
 <br />
