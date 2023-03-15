@@ -116,7 +116,7 @@ function cekrik(dims = 64, wm = true) {
         canvas.height / 2 + fontSize * scale
       );
     }
-    // Return Promise Blob
+    // Return Base64
     success(canvas.toDataURL("image/webp", 0.75));
   });
 }
