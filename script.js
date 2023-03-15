@@ -46,7 +46,6 @@ function absensi() {
 
             // test file form
             img.value = image;
-            hadir.submit()
             // test
 
             clearInterval(loading);

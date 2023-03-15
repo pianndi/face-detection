@@ -21,7 +21,7 @@ function upload($data) {
           </script>";
     return false;
   }
-  $namaFileBaru = uniqid()  . "." . $ekstensiGambar;
+  $namaFileBaru = uniqid()  . ".$ekstensiGambar";
   //move_uploaded_file($tmpName, "foto_absen/".$namaFileBaru);
   file_put_contents("foto_absen/".$namaFileBaru, $base64);
   return $namaFileBaru;
