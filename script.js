@@ -7,10 +7,14 @@ function cariWajah() {
     absensi();
   });
 }
-function absensi() {
+let stream;
+async function absensi() {
   if ("mediaDevices" in navigator) {
-    navigator.mediaDevices
-      .getUserMedia({
+    try {
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
+      }
+      stream = await navigator.mediaDevices.getUserMedia({
         audio: false,
         video: {
           facingMode: "user",
@@ -22,59 +26,61 @@ function absensi() {
           width: { min: 576, ideal: 720, max: 1080 },
           height: { min: 576, ideal: 720, max: 1080 },
         },
-      })
-      .then((stream) => {
-        video.srcObject = stream;
-        video.style.display = "block";
-        const track = stream.getVideoTracks()[0];
-
-        let interval = 400;
-        // CEK SETIAP 0.4s SEKALI KARENA BIKIN LAG!!
-
-        let cek = setInterval(async function () {
-          input = video;
-          const detections = await faceapi.detectSingleFace(
-            input,
-            new faceapi.TinyFaceDetectorOptions()
-          );
-          if (detections) {
-            clearInterval(cek);
-            // return data image
-            let image = await cekrik(64);
-            test.src = image;
-            // return data image
-
-            // test file form
-            img.value = image;
-            // test
-
-            clearInterval(loading);
-            condition.style.color = "green";
-            condition.innerHTML = "Wajah Terdeteksi!";
-            video.style.display = "none";
-            test.style.display = "block";
-
-            // Menghindari gambar hitam
-            setTimeout(function () {
-              track.stop();
-            }, 100);
-          }
-        }, interval);
-
-        // animasi loading
-        condition.style.color = "black";
-        condition.innerHTML = "Mencari Wajah";
-        let loading = setInterval(function () {
-          if (condition.innerHTML.length < 16) {
-            condition.innerHTML += ".";
-          } else {
-            condition.innerHTML = "Mencari Wajah";
-          }
-        }, interval);
-      })
-      .catch((err) => {
-        condition.innerHTML = "Camera " + err.message;
       });
+
+      video.srcObject = stream;
+      video.style.display = "block";
+      const tracks = stream.getVideoTracks();
+
+      let interval = 400;
+      // CEK SETIAP 0.4s SEKALI KARENA BIKIN LAG!!
+
+      let cek = setInterval(async function () {
+        input = video;
+        const detections = await faceapi.detectSingleFace(
+          input,
+          new faceapi.TinyFaceDetectorOptions()
+        );
+        if (detections) {
+          clearInterval(cek);
+          // return data image
+          let image = await cekrik(64);
+          test.src = image;
+          // return data image
+
+          // test file form
+          img.value = image;
+          // test
+
+          clearInterval(loading);
+          condition.style.color = "green";
+          condition.innerHTML = "Wajah Terdeteksi!";
+          video.style.display = "none";
+          test.style.display = "block";
+
+          // Menghindari gambar hitam
+          setTimeout(function () {
+            tracks.forEach((track) => {
+              track.stop();
+            });
+          }, 100);
+        }
+      }, interval);
+
+      // animasi loading
+      condition.style.color = "black";
+      condition.innerHTML = "Mencari Wajah";
+      let loading = setInterval(function () {
+        if (condition.innerHTML.length < 16) {
+          condition.innerHTML += ".";
+        } else {
+          condition.innerHTML = "Mencari Wajah";
+        }
+      }, interval);
+    } catch (err) {
+      console.log(err);
+      condition.innerHTML = "Camera " + err.message;
+    }
   }
 }
 
