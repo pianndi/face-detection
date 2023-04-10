@@ -1,39 +1,33 @@
 // Load faceapi
-
 function cariWajah() {
+  condition.innerHTML = "";
+  condition.style.color = "black";
+  test.style.display = "none";
+  condition.innerHTML = "Loading...";
   faceapi.nets.tinyFaceDetector.loadFromUri("models").then(() => {
-    test.style.display = "none";
-    condition.innerHTML = "";
     absensi();
   });
 }
+
 let stream;
+let deviceId;
 async function absensi() {
   if ("mediaDevices" in navigator) {
+    if (stream) {
+      stream.getTracks().forEach((track) => track.stop());
+    }
     try {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
       stream = await navigator.mediaDevices.getUserMedia({
-        audio: false,
         video: {
-          facingMode: "user",
-          advanced: [
-            {
-              focusMode: "auto",
-            },
-          ],
-          width: { min: 576, ideal: 720, max: 1080 },
-          height: { min: 576, ideal: 720, max: 1080 },
+          facingMode: { exact: "user" },
         },
       });
-
+      const tracks = stream.getVideoTracks();
       video.srcObject = stream;
       video.style.display = "block";
-      const tracks = stream.getVideoTracks();
 
-      let interval = 400;
-      // CEK SETIAP 0.4s SEKALI KARENA BIKIN LAG!!
+      let interval = 500;
+      // CEK SETIAP 0.5s SEKALI KARENA BIKIN LAG!!
 
       let cek = setInterval(async function () {
         input = video;
@@ -44,14 +38,11 @@ async function absensi() {
         if (detections) {
           clearInterval(cek);
           // return data image
-          let image = await cekrik(64);
+          let image = cekrik(64);
           test.src = image;
           // return data image
 
-          // test file form
           img.value = image;
-          // test
-
           clearInterval(loading);
           condition.style.color = "green";
           condition.innerHTML = "Wajah Terdeteksi!";
@@ -61,14 +52,14 @@ async function absensi() {
           // Menghindari gambar hitam
           setTimeout(function () {
             tracks.forEach((track) => {
+              hadir.submit();
               track.stop();
             });
-          }, 100);
+          }, 1500);
         }
       }, interval);
 
       // animasi loading
-      condition.style.color = "black";
       condition.innerHTML = "Mencari Wajah";
       let loading = setInterval(function () {
         if (condition.innerHTML.length < 16) {
@@ -86,43 +77,39 @@ async function absensi() {
 
 function cekrik(dims = 64, wm = true) {
   // kompres gambar ke dims pixel
-  return new Promise((success) => {
-    canvas.width = dims;
-    canvas.height = dims;
-    const c = canvas.getContext("2d");
 
+  canvas.width = dims;
+  canvas.height = dims * (video.videoHeight / video.videoWidth);
+  console.log(canvas.height);
+  const c = canvas.getContext("2d");
+
+  c.scale(-1, 1);
+  c.drawImage(video, -dims, 0, canvas.width, canvas.height);
+
+  if (wm) {
+    c.imageSmoothingEnabled = false;
     c.scale(-1, 1);
-    c.drawImage(video, -dims, 0, dims, dims);
+    let scale = dims / 64;
+    c.textAlign = "center";
+    c.lineWidth = 0.5 * scale;
 
-    if (wm) {
-      c.imageSmoothingEnabled = false;
-      c.scale(-1, 1);
-      let scale = dims / 64;
-      c.textAlign = "center";
-      c.lineWidth = 0.5 * scale;
+    // Judul
+    let fontSize = 20;
+    let text = "E-kur";
+    c.strokeStyle = "rgba(23,23,23,0.7)";
+    c.fillStyle = "rgba(76,175,80,0.3)";
+    c.font = `normal normal 900 ${fontSize * scale}px arial`;
+    c.fillText(text, canvas.width / 2, canvas.height / 2);
+    c.strokeText(text, canvas.width / 2, canvas.height / 2);
 
-      // Judul
-      let fontSize = 20;
-      let text = "E-kur";
-      c.strokeStyle = "rgba(23,23,23,0.7)";
-      c.fillStyle = "rgba(76,175,80,0.3)";
-      c.font = `normal normal 900 ${fontSize * scale}px arial`;
-      c.fillText(text, canvas.width / 2, canvas.height / 2);
-      c.strokeText(text, canvas.width / 2, canvas.height / 2);
-
-      // Deskripsi
-      fontSize = 8;
-      text = "SMKN 1 Demak";
-      c.fillStyle = "rgba(255,255,255,0.3)";
-      c.font = `normal normal 900 ${fontSize * scale}px arial`;
-      c.fillText(text, canvas.width / 2, canvas.height / 2 + fontSize * scale);
-      c.strokeText(
-        text,
-        canvas.width / 2,
-        canvas.height / 2 + fontSize * scale
-      );
-    }
-    // Return Base64
-    success(canvas.toDataURL("image/webp", 0.75));
-  });
+    // Deskripsi
+    fontSize = 8;
+    text = "SMKN 1 Demak";
+    c.fillStyle = "rgba(255,255,255,0.3)";
+    c.font = `normal normal 900 ${fontSize * scale}px arial`;
+    c.fillText(text, canvas.width / 2, canvas.height / 2 + fontSize * scale);
+    c.strokeText(text, canvas.width / 2, canvas.height / 2 + fontSize * scale);
+  }
+  // Return Base64
+  return canvas.toDataURL("image/jpeg", 0.75);
 }
