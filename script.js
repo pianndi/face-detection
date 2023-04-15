@@ -70,7 +70,7 @@ async function absensi() {
       }, interval);
     } catch (err) {
       console.log(err);
-      condition.innerHTML = "Camera " + err.message;
+      condition.innerHTML = err.message;
     }
   }
 }
