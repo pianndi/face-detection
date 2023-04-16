@@ -1,0 +1,10 @@
+button {
+  background-color: #234567;
+  border: 3px solid black;
+  border-radius: 10px;
+  color:white;
+  padding: 6px;
+}
+form {
+  display: none;
+}
