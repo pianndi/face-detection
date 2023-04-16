@@ -3,6 +3,7 @@ function cariWajah() {
   condition.innerHTML = "";
   condition.style.color = "black";
   test.style.display = "none";
+  condition.style.display = "block";
   condition.innerHTML = "Loading...";
   faceapi.nets.tinyFaceDetector.loadFromUri("models").then(() => {
     absensi();

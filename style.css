@@ -2,9 +2,14 @@ button {
   background-color: #234567;
   border: 3px solid black;
   border-radius: 10px;
-  color:white;
+  color: white;
   padding: 6px;
 }
 form {
   display: none;
+}
+#condition {
+  background-color: #ffff50;
+  border: 2px solid #eaeaa1;
+  border-radius: 5px;
 }
