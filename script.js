@@ -5,9 +5,7 @@ function cariWajah() {
   test.style.display = "none";
   condition.style.display = "block";
   condition.innerHTML = "Loading...";
-  faceapi.nets.tinyFaceDetector.loadFromUri("models").then(() => {
-    absensi();
-  });
+  faceapi.nets.tinyFaceDetector.loadFromUri("models").then(absensi);
 }
 
 let stream;
@@ -26,39 +24,37 @@ async function absensi() {
       const tracks = stream.getVideoTracks();
       video.srcObject = stream;
       video.style.display = "block";
+      let interval = 200;
+      //CEK SETIAP 0.2s SEKALI KARENA BIKIN LAG!!
+      video.oncanplay = () => {
+        let cek = setInterval(async function () {
+          input = video;
+          // const detections = true;
+          const detections = await faceapi.detectSingleFace(
+            input,
+            new faceapi.TinyFaceDetectorOptions()
+          );
+          
+          if (detections) {
+            clearInterval(cek);
+            // return data image
+            let image = cekrik(64);
+            test.src = image;
+            // return data image
 
-      let interval = 500;
-      // CEK SETIAP 0.5s SEKALI KARENA BIKIN LAG!!
-
-      let cek = setInterval(async function () {
-        input = video;
-        const detections = await faceapi.detectSingleFace(
-          input,
-          new faceapi.TinyFaceDetectorOptions()
-        );
-        if (detections) {
-          clearInterval(cek);
-          // return data image
-          let image = cekrik(64);
-          test.src = image;
-          // return data image
-
-          img.value = image;
-          clearInterval(loading);
-          condition.style.color = "green";
-          condition.innerHTML = "Wajah Terdeteksi!";
-          video.style.display = "none";
-          test.style.display = "block";
-
-          // Menghindari gambar hitam
-          setTimeout(function () {
-            tracks.forEach((track) => {
+            img.value = image;
+            clearInterval(loading);
+            condition.style.color = "green";
+            condition.innerHTML = "Wajah Terdeteksi!";
+            video.style.display = "none";
+            test.style.display = "block";
+            // Menghindari gambar hitam
+            test.addEventListener("load", () => {
               hadir.submit();
-              track.stop();
             });
-          }, 1500);
-        }
-      }, interval);
+          }
+        }, interval);
+      };
 
       // animasi loading
       condition.innerHTML = "Mencari Wajah";
@@ -70,7 +66,6 @@ async function absensi() {
         }
       }, interval);
     } catch (err) {
-      console.log(err);
       condition.innerHTML = err.message;
     }
   }
@@ -80,12 +75,17 @@ function cekrik(dims = 64, wm = true) {
   // kompres gambar ke dims pixel
 
   canvas.width = dims;
-  canvas.height = dims * (video.videoHeight / video.videoWidth);
-  console.log(canvas.height);
+  canvas.height = dims;
   const c = canvas.getContext("2d");
 
   c.scale(-1, 1);
-  c.drawImage(video, -dims, 0, canvas.width, canvas.height);
+  c.drawImage(
+    video,
+    -dims,
+    -(canvas.height * (video.videoHeight / video.videoWidth)) + dims,
+    canvas.width,
+    canvas.height * (video.videoHeight / video.videoWidth)
+  );
 
   if (wm) {
     c.imageSmoothingEnabled = false;

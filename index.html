@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Absensi</title>
-    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <button onclick="cariWajah()" style="margin: auto; display: block">
@@ -18,20 +17,25 @@
       id="test"
     />
     <canvas style="display: none" width="64" height="64" id="canvas"></canvas>
-    <video
-      width="400px"
-      id="video"
-      style="
-        display: none;
-        -webkit-transform: scaleX(-1);
-        transform: scaleX(-1);
-      "
-      autoplay
-    ></video>
-    <form id="hadir" action="upload.php" method="post">
+    <div
+      style="width: 400px; height: 400px; overflow: hidden; position: relative"
+    >
+      <video
+        width="400px"
+        id="video"
+        style="
+          position: absolute;
+          bottom: 0;
+          display: none;
+          -webkit-transform: scaleX(-1);
+          transform: scaleX(-1);
+        "
+        autoplay
+      ></video>
+    </div>
+    <form id="hadir" action="upload.php" method="post" style="display: none">
       <input name="img" type="text" id="img" autocomplete="none" />
     </form>
-
     <script defer src="face-api.min.js"></script>
     <script defer src="script.js"></script>
   </body>
