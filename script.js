@@ -1,3 +1,8 @@
+const condition = document.getElementById("condition");
+const test = document.getElementById("test");
+const video = document.getElementById("video");
+const videoWrapper = document.getElementById("videoWrapper");
+
 // Load faceapi
 function cariWajah() {
   condition.innerHTML = "";
@@ -23,7 +28,7 @@ async function absensi() {
       });
       const tracks = stream.getVideoTracks();
       video.srcObject = stream;
-      video.style.display = "block";
+      videoWrapper.style.display = "block";
       let interval = 200;
       //CEK SETIAP 0.2s SEKALI KARENA BIKIN LAG!!
       video.oncanplay = () => {
@@ -34,7 +39,7 @@ async function absensi() {
             input,
             new faceapi.TinyFaceDetectorOptions()
           );
-          
+
           if (detections) {
             clearInterval(cek);
             // return data image
@@ -46,7 +51,7 @@ async function absensi() {
             clearInterval(loading);
             condition.style.color = "green";
             condition.innerHTML = "Wajah Terdeteksi!";
-            video.style.display = "none";
+            videoWrapper.style.display = "none";
             test.style.display = "block";
             // Menghindari gambar hitam
             test.addEventListener("load", () => {

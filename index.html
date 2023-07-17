@@ -18,7 +18,15 @@
     />
     <canvas style="display: none" width="64" height="64" id="canvas"></canvas>
     <div
-      style="width: 400px; height: 400px; overflow: hidden; position: relative"
+      id="videoWrapper"
+      style="
+      display:none;
+        width: 400px;
+        height: 400px;
+        overflow: hidden;
+        position: relative;
+        margin: auto;
+      "
     >
       <video
         width="400px"
@@ -26,7 +34,6 @@
         style="
           position: absolute;
           bottom: 0;
-          display: none;
           -webkit-transform: scaleX(-1);
           transform: scaleX(-1);
         "
