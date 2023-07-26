@@ -1,4 +1,5 @@
 const condition = document.getElementById("condition");
+const cariWajahButton = document.getElementById("cariWajahButton");
 const test = document.getElementById("test");
 const video = document.getElementById("video");
 const videoWrapper = document.getElementById("videoWrapper");
@@ -6,11 +7,15 @@ const videoWrapper = document.getElementById("videoWrapper");
 // Load faceapi
 function cariWajah() {
   condition.innerHTML = "";
+  cariWajahButton.disabled = true;
   condition.style.color = "black";
   test.style.display = "none";
   condition.style.display = "block";
-  condition.innerHTML = "Loading...";
-  faceapi.nets.tinyFaceDetector.loadFromUri("models").then(absensi);
+  condition.innerHTML = "Loading";
+  faceapi.nets.tinyFaceDetector
+    .loadFromUri("models")
+    .then(absensi)
+    .catch(() => (cariWajahButton.disabled = false));
 }
 
 let stream;
@@ -26,11 +31,12 @@ async function absensi() {
           facingMode: { exact: "user" },
         },
       });
+      cariWajahButton.disabled = false;
       const tracks = stream.getVideoTracks();
       video.srcObject = stream;
       videoWrapper.style.display = "block";
-      let interval = 200;
-      //CEK SETIAP 0.2s SEKALI KARENA BIKIN LAG!!
+      let interval = 300;
+      //CEK SETIAP 0.4s SEKALI KARENA BIKIN LAG!!
       video.oncanplay = () => {
         let cek = setInterval(async function () {
           input = video;
@@ -72,6 +78,7 @@ async function absensi() {
       }, interval);
     } catch (err) {
       condition.innerHTML = err.message;
+      cariWajahButton.disabled = false;
     }
   }
 }
@@ -116,6 +123,7 @@ function cekrik(dims = 64, wm = true) {
     c.fillText(text, canvas.width / 2, canvas.height / 2 + fontSize * scale);
     c.strokeText(text, canvas.width / 2, canvas.height / 2 + fontSize * scale);
   }
+
   // Return Base64
   return canvas.toDataURL("image/jpeg", 0.75);
 }

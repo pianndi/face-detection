@@ -7,9 +7,6 @@
     <title>Absensi</title>
   </head>
   <body>
-    <button onclick="cariWajah()" style="margin: auto; display: block">
-      Cek Wajah
-    </button>
     <h2 id="condition" style="text-align: center; display: none"></h2>
     <img
       style="width: 400px; display: none; margin: auto"
@@ -20,9 +17,9 @@
     <div
       id="videoWrapper"
       style="
-      display:none;
-        width: 400px;
-        height: 400px;
+        display: none;
+        width: 300px;
+        height: 300px;
         overflow: hidden;
         position: relative;
         margin: auto;
@@ -40,6 +37,13 @@
         autoplay
       ></video>
     </div>
+    <button
+      onclick="cariWajah()"
+      id="cariWajahButton"
+      style="margin: auto; display: block"
+    >
+      Cek Wajah
+    </button>
     <form id="hadir" action="upload.php" method="post" style="display: none">
       <input name="img" type="text" id="img" autocomplete="none" />
     </form>
