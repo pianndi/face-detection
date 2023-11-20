@@ -7,9 +7,16 @@
     <title>Absensi</title>
   </head>
   <body>
+    <img
+      width="100px"
+      src="face.jpg"
+      style="display: none"
+      alt="face"
+      id="faceImg"
+    />
     <h2 id="condition" style="text-align: center; display: none"></h2>
     <img
-      style="width: 400px; display: none; margin: auto"
+      style="width: 300px; display: none; margin: auto"
       alt="foto"
       id="test"
     />
@@ -23,14 +30,16 @@
         overflow: hidden;
         position: relative;
         margin: auto;
+        border-radius: 50%;
       "
     >
       <video
-        width="400px"
+        width="300px"
         id="video"
         style="
           position: absolute;
           bottom: 0;
+          left: 0;
           -webkit-transform: scaleX(-1);
           transform: scaleX(-1);
         "
