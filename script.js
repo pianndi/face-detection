@@ -37,7 +37,6 @@ async function cariWajah() {
       const models = await Promise.all(
         cachess.map(async (c, i) => {
           if (c instanceof Float32Array) return c;
-          console.log(c);
           // return new Float32Array(c.split(",").map((v) => parseFloat(v)));
           const model = await faceapi.fetchNetWeights(
             "models/" + modelNames[i]
@@ -120,7 +119,13 @@ async function absensi() {
             descriptor,
             detections.descriptor
           );
-          if (distance >= 0.4) return;
+          if (distance >= 0.4) {
+            condition.style.color = "red";
+          condition.innerHTML = "Wajah Tidak Cocok!";
+          videoWrapper.style.display = "none";
+          clearInterval(cek);
+            return;
+          }
           console.log(distance);
           clearInterval(cek);
           // clearTimeout(timeout);
@@ -135,9 +140,9 @@ async function absensi() {
           videoWrapper.style.display = "none";
           test.style.display = "block";
           // Menghindari gambar hitam
-          test.addEventListener("load", () => {
-            hadir.submit();
-          });
+          // test.addEventListener("load", () => {
+          //   hadir.submit();
+          // });
         }
       }, interval);
       // let timeout = setTimeout(() => {
